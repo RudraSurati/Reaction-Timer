@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reaction Timer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "Roboto", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .d-none {
+            display: none!important;
+        }
+
+        .box {
+            width: 80vw;
+            height: 50%;
+            border-radius: 20px;
+            box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            z-index: 1;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .ready {
+            font-size: 25px;
+            cursor: pointer;
+            padding: 10px 15px;
+            border: 1px solid #000;
+            outline: none;
+            background-color: transparent;
+        }
+
+        .box h1 {
+            width: 80%;
+            font-size: 3vw;
+            text-align: center;
+        }
+
+        .main {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #FF2400;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .time {
+            font-size: 10vw;
+            color: pointer;
+            color: #fff;
+        }
+
+        .overlayButton {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: none;
+            outline: none;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        .restart {
+            font-size: 20px;
+            padding: 10px 15px;
+            border: 1px solid #fff;
+            outline: none;
+            border-radius: 20px;
+            position: absolute;
+            bottom: 20%;
+            cursor: pointer;
+            background-color: transparent;
+            color: #fff;
+        }
+
+        @media only screen and (max-width: 550px) {
+            .box h1 {
+                font-size: 5vw;
+            }
+
+            .time {
+                font-size: 15vw;
+            }
+        }
+
+        @media only screen and (max-width: 300px) {
+            .box h1 {
+                font-size: 7vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio src="./intense.mp3" type="audio/mp3"></audio>
+    <div class="box">
+        <h1>When the red background changes to green, after how much time you will click at the change of color will be your reaction time.</h1>
+        <button class="ready">Ready</button>
+    </div>
+    <div class="main">
+        <h1 class="timer time">00.000</h1>
+        <h1 class="result time d-none"></h1>
+        <button class="overlayButton d-none"></button>
+        <button class="restart d-none" onclick="location.reload()">Restart</button>
+    </div>
+
+    <script>
+        const box = document.querySelector('.box');
+        const timer = document.querySelector('.timer');
+        const overlayButton = document.querySelector('.overlayButton');
+        const main = document.querySelector('.main');
+        const ready = document.querySelector('.ready');
+        const restart = document.querySelector('.restart');
+        const sec = document.querySelector('.sec');
+        const milliSec = document.querySelector('.milliSec');
+        const audio = document.querySelector('audio');
+        const result = document.querySelector('.result');
+
+        let time = (Math.floor((Math.random() * 7)) + 3) * 1000;
+        let s = 0;
+        let ms = 0;
+
+        ready.addEventListener('click', () => {
+            box.classList.add('d-none');
+            audio.play();
+            setTimeout(stop, time)
+
+        })
+
+        const stop = () => {
+            audio.pause();
+            overlayButton.classList.remove('d-none');
+            setInterval(() => updateTime(startTime), 100);
+            var startTime = Date.now();
+            main.style.backgroundColor = "#39FF14"
+        }
+
+        const updateTime = (s) => {
+            var elapsedTime = Date.now() - s;
+            timer.innerHTML = (elapsedTime / 1000).toFixed(3);
+        }
+
+        overlayButton.addEventListener('click', () => {
+            overlayButton.classList.add('d-none');
+            main.style.backgroundColor = "#FF2400"
+            time = (Math.floor((Math.random() * 7)) + 3) * 1000;
+            result.classList.remove('d-none');
+            result.innerHTML = timer.innerHTML;
+            restart.classList.remove('d-none');
+            timer.classList.add('d-none');
+        })
+    </script>
+</body>
+</html>
